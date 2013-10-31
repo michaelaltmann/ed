@@ -1,1 +1,1 @@
-var Hospitals = new Meteor.Collection("hospitals");
+Hospitals = new Meteor.Collection("hospitals");
