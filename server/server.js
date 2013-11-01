@@ -1,24 +1,31 @@
 function loadAllHospitals() {
     var url = "http://data.medicare.gov/resource/ee3i-x2ic.json?state=MN&measure=ED2&$where=sample>0";
     res = Meteor.http.get(url);
-    Hospitals.remove();
+    var previouslyLoaded = 0;
+    var newlyLoaded = 0;
     for (var i = 0; i < res.data.length; i++) {
         var obj = res.data[i];
-        var address = obj.address_1 + ", " + obj.city + ", " + obj.state + " " + obj.zip_code;
-        try {
-            var pt = geocode(address);
-            var hosp = {
-                name: obj.name,
-                address: address,
-                lat: pt[0],
-                lng: pt[1]
-            };
-            Hospitals.insert(hosp);
-        } catch (err) {
-            console.error(err);
+        var existing = Hospitals.find({
+            provider_id: obj.provider_id
+        });
+        if (existing.count() == 0) {
+            obj.address =  obj.address_1 + ", " + obj.city + ", " + obj.state + " " + obj.zip_code;
+            try {
+                var pt = geocode(obj.address);
+                obj.lat = pt[0];
+                obj.lng = pt[1];
+                Hospitals.insert(obj);
+                newlyLoaded++;
+            } catch (err) {
+                console.error(err);
+            }
+        } else {
+            previouslyLoaded++;
         }
 
     }
+    console.log("newlyLoaded: " + newlyLoaded 
+               + ", previouslyLoaded: " + previouslyLoaded);
     console.log("--- END --- ");
 }
 

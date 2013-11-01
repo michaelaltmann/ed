@@ -3,9 +3,9 @@ Template.hello.greeting = function () {
 };
 
 Template.hello.events({
-    'click input' : function () {
+    'click input': function () {
         // template data, if any, is available in 'this'
-        loadSites();
+        loadPoints();
         drawDiagram();
     }
 });
@@ -14,8 +14,11 @@ Meteor.subscribe("hospitals");
 
 var width = 960,
     height = 500,
-    minlat = 40, maxlat=47,
-    minlng = -94, maxlng = -93;
+    minlat = 42.3,
+    maxlat = 47.5,
+    minlng = -96.3,
+    maxlng = -91.1,
+    maxRate = 200;
 
 var colors = [
     "rgb(197,27,125)",
@@ -32,64 +35,71 @@ var colors = [
 
 var voronoi = d3.geom.voronoi();
 
-var canvas ;
+var canvas;
 var context;
-var sites;
+var sites, siteMap;
 
 function scale(pt) {
-    x = (width) * (pt[0]-minlat) / (maxlat - minlat);
-    y = height * (pt[1] - minlng) / (maxlng - minlng);
-    retur [x,y];
+    x = width * (pt[1] - minlng) / (maxlng - minlng);
+    if (x < 0) x = 0;
+    if (x > width) x = width;
+    y = height * (pt[0] - minlat) / (maxlat - minlat);
+    if (y < 0) y = 0;
+    if (y > height) y = height;
+    return [x, y];
 }
 
-function readOne (hospital) {
-    //TODO: Rescale boundingbox to view port
-    sites.push(scale([hospital.lat,hospital.lng]));
+function readOnePoint(hospital) {
+    var screenPt = scale([hospital.lat, hospital.lng]);
+    if (screenPt != null && screenPt.length == 2) {
+        if (siteMap[screenPt] != null) {
+            alert("Skipping dup: " + screenPt);
+        } else {
+            var red = hospital.rate * 255 / maxRate;
+            hospital.style = "rgb(" + red + ",0,0)";     
+            siteMap[screenPt] = hospital;
+            sites[sites.length] = screenPt;
+        }
+    }
 }
-function loadSites() { 
-    sites = [];
+
+function loadPoints() {
     var iterator = Hospitals.find();
-    iterator.forEach(readOne);
+    sites = [];
+    siteMap = {};
+    iterator.forEach(readOnePoint);
 }
-
-
-//d3.range(100).map(function(d) {
-//        return [Math.random() * width, Math.random() * //height];
-//    });
 
 
 function drawDiagram() {
     canvas = d3.select("body").append("canvas")
-    .attr("width", width)
-    .attr("height", height)
-    .on("mousemove", function() { sites[0] = d3.mouse(this); redraw(); });
-    
+        .attr("width", width)
+        .attr("height", height);
+
     context = canvas.node().getContext("2d");
-    
+
     redraw();
-}              
+}
 
 function redraw() {
     var cells = voronoi(sites);
-    
+
     context.clearRect(0, 0, width, height);
-    
-    context.fillStyle = "yellow";
-    draw(cells[0]);
-    context.fill();
-    
-    for (var k = 0, l = colors.length; k < l; ++k) {
-        context.fillStyle = colors[k];
-        for (var i = 1, n = cells.length; i < n; ++i) {
-            if (i % l === k && draw(cells[i])) context.fill();
-        }
+
+    for (var i = 0, n = cells.length; i < n; ++i) {
+        var cell = cells[i];
+        var screenPt = cell.point;
+        hospital = siteMap[screenPt];
+        context.fillStyle = hospital.style;
+        if (draw(cell)) context.fill();
     }
-    
+
+
     context.strokeStyle = "white";
     for (var i = 0, n = cells.length; i < n; ++i) {
         if (draw(cells[i])) context.stroke();
     }
-    
+
     context.fillStyle = "black";
     for (var i = 1, n = sites.length, site; i < n; ++i) {
         site = sites[i];
@@ -110,5 +120,3 @@ function draw(cell) {
         return true;
     }
 }
-
-
