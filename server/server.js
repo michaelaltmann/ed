@@ -48,7 +48,7 @@ function loadAllHospitals() {
             hosp = existing.fetch()[0];
             previouslyLoaded++;
         }
-        console.log(hosp.provider_id + "." + obj.measure + " = " + obj.rate);
+//        console.log(hosp.provider_id + "." + obj.measure + " = " + obj.rate);
         addMeasure(obj.measure, parseInt(obj.rate));
         hosp.measures[obj.measure] = obj.rate;
         Hospitals.update(selector, hosp);
