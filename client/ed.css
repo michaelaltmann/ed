@@ -1,11 +1,70 @@
 /* CSS declarations go here */
 path {
-  stroke: #fff;
+  stroke: black;
+    fill: none;
+}
+.map {
+    stroke: gray;
 }
 
-path:first-child {
-  fill: yellow !important;
+.cell0 {
+    fill: #FFF;
 }
+
+.cell1 {
+    fill: #FEE;
+}
+
+.cell2 {
+    fill: #FDD;
+}
+
+.cell3 {
+    fill: #FCC;
+}
+
+.cell4 {
+    fill: #FBB;
+}
+
+.cell5 {
+    fill: #Faa;
+}
+
+.cell6 {
+    fill: #F99;
+}
+
+.cell7 {
+    fill: #F88;
+}
+
+.cell8 {
+    fill: #F77;
+}
+
+.cell9 {
+    fill: #F66;
+}
+.cell10 {
+    fill: #F55;
+}
+.cell11 {
+    fill: #F44;
+}
+.cell12 {
+    fill: #F33;
+}
+.cell13 {
+    fill: #F22;
+}
+.cell14 {
+    fill: #F11;
+}
+.cell15 {
+    fill: #F00;
+}
+
 
 circle {
   fill: #000;
