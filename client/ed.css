@@ -7,6 +7,10 @@ path {
     stroke: gray;
 }
 
+.cell-1 {
+    fill: #DDD;
+}
+
 .cell0 {
     fill: #FFF;
 }

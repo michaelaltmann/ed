@@ -1,28 +1,57 @@
+
+function addMeasure(name, value) {
+    var selector = {name: name};
+    var existing = Measures.find(selector);
+    var m;
+    if (existing.count() == 0) {
+        m = {name: name, min: 1000, max: 0};
+        Measures.insert(m);
+    } else {
+        m = existing.fetch()[0];
+    } 
+    if (m.min == null) m.min = 1000;
+    if (m.max == null) m.max = 0;
+    if (value < m.min) m.min = value;
+    if (value > m.max) m.max = value;
+    Measures.update(selector, m);
+}
 function loadAllHospitals() {
-    var url = "http://data.medicare.gov/resource/ee3i-x2ic.json?state=MN&measure=ED2&$where=sample>0";
+    var url = "http://data.medicare.gov/resource/ee3i-x2ic.json?state=MN&$where=sample>0";
+    Measures.remove();
     res = Meteor.http.get(url);
     var previouslyLoaded = 0;
     var newlyLoaded = 0;
     for (var i = 0; i < res.data.length; i++) {
         var obj = res.data[i];
-        var existing = Hospitals.find({
+        var selector = {
             provider_id: obj.provider_id
-        });
+        };
+        var existing = Hospitals.find(selector);
+        var hosp;
         if (existing.count() == 0) {
-            obj.address =  obj.address_1 + ", " + obj.city + ", " + obj.state + " " + obj.zip_code;
+            hosp = {
+                provider_id : obj.provider_id,
+                name : obj.hospital_name,
+                measures : {}
+            };
+            hosp.address =  obj.address_1 + ", " + obj.city + ", " + obj.state + " " + obj.zip_code;
             try {
-                var pt = geocode(obj.address);
-                obj.lat = pt[0];
-                obj.lng = pt[1];
-                Hospitals.insert(obj);
+                var pt = geocode(hosp.address);
+                hosp.lat = pt[0];
+                hosp.lng = pt[1];
+                Hospitals.insert(hosp);
                 newlyLoaded++;
             } catch (err) {
                 console.error(err);
             }
         } else {
+            hosp = existing.fetch()[0];
             previouslyLoaded++;
         }
-
+        console.log(hosp.provider_id + "." + obj.measure + " = " + obj.rate);
+        addMeasure(obj.measure, parseInt(obj.rate));
+        hosp.measures[obj.measure] = obj.rate;
+        Hospitals.update(selector, hosp);
     }
     console.log("newlyLoaded: " + newlyLoaded 
                + ", previouslyLoaded: " + previouslyLoaded);

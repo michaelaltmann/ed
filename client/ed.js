@@ -1,22 +1,25 @@
-Template.hello.greeting = function () {
-    return "Welcome to ed.";
-};
-
-Template.hello.events({
-    'click input': function () {
-        // template data, if any, is available in 'this'
+Template.main.events({
+    "change #measurePicker": function (evt) {
+        var measureName = $(evt.target).val();
+        measure = Measures.find({
+            name: measureName
+        }).fetch()[0];
         loadMap();
         loadPoints();
         drawDiagram();
     }
 });
 
+Template.main.measures = function () {
+    return Measures.find();
+}
+
 Meteor.subscribe("hospitals");
 
 var width = 600,
     height = 500,
     maxRate = 60;
-
+var measure = "ED2";
 var bBox = [[43.5, -97],[49, -91]];
 
 
@@ -54,7 +57,7 @@ function readOnePoint(hospital) {
 
 function createSvg() {
     if (svg == null) {
-        svg = d3.select("body").append("svg")
+        svg = d3.select("#map").append("svg")
             .attr("overflow", "hidden")
             .attr("width", width)
             .attr("height", height);
@@ -97,12 +100,20 @@ function redraw() {
         var cell = cells[i];
         var screenPt = cell.point;
         hospital = siteMap[screenPt];
-        console.log("rate " + hospital.rate);
-        var level = Math.floor(hospital.rate * 16 / maxRate);
-        if (level < 0) level = 0;
-        if (level > 15) level = 15;
+        var rate = hospital.measures[measure.name];
+        console.log("rate " + rate);
+        var level, label;
+        if (rate == null) {
+            level = -1;
+            label = hospital.name + " NA";
+        } else {
+            level = Math.floor((rate - measure.min) * 16 / (measure.max - measure.min));
+            if (level < 0) level = 0;
+            if (level > 15) level = 15;
+            label = hospital.name + " " + rate;
+        }
         var style = "cell" + level;
-        draw(cell, style);
+        draw(cell, style, label);
     }
 }
 
@@ -111,13 +122,19 @@ function cellToFeature(cell) {
     console.log("----");
     // Need to reverse the order because 
     // D3 geom wants them in clockwise order
+j=0;
+    var lat = cell[j][1],
+            lng = cell[j][0];
+        var point = [lat, lng];
+        coordinates[coordinates.length] = point;
+
     for (var j = cell.length - 1; j >= 0; j--) {
         var lat = cell[j][1],
             lng = cell[j][0];
         var point = [lat, lng];
-        console.log(point);
         coordinates[coordinates.length] = point;
     }
+
     var feature = {
         "type": "Feature",
         "geometry": {
@@ -129,12 +146,13 @@ function cellToFeature(cell) {
     return feature;
 }
 
-function draw(cell, style) {
+function draw(cell, style, label) {
     var feature = cellToFeature(cell);
     var path = d3.geo.path()
         .projection(projection);
     svg.append("path")
         .datum(feature)
         .attr("class", style)
-        .attr("d", path);
+        .attr("d", path)
+        .append("svg:title").text(label);
 }
