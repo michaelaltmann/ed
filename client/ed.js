@@ -20,7 +20,7 @@ var width = 600,
     height = 500,
     maxRate = 60;
 var measure = "ED2";
-var bBox = [[43.5, -97],[49, -91]];
+var bBox = [[43.5, -97], [49, -91]];
 
 
 var canvas;
@@ -107,8 +107,9 @@ function redraw() {
             level = -1;
             label = hospital.name + " NA";
         } else {
-            level = Math.floor((rate - measure.min) * 16 / (measure.max - measure.min));
-            if (level < 0) level = 0;
+            // looks beter not to use level 0
+            level = 1+ Math.floor((rate - measure.min) * 15 / (measure.max - measure.min));
+            if (level < 1) level = 1;
             if (level > 15) level = 15;
             label = hospital.name + " " + rate;
         }
@@ -122,20 +123,13 @@ function cellToFeature(cell) {
     console.log("----");
     // Need to reverse the order because 
     // D3 geom wants them in clockwise order
-j=0;
-    var lat = cell[j][1],
-            lng = cell[j][0];
-        var point = [lat, lng];
-        coordinates[coordinates.length] = point;
-
     for (var j = cell.length - 1; j >= 0; j--) {
-        var lat = cell[j][1],
-            lng = cell[j][0];
-        var point = [lat, lng];
-        coordinates[coordinates.length] = point;
+        coordinates[coordinates.length] = cell[j].reverse();
     }
+    //complete the loop of the polygon
+    coordinates[coordinates.length] = coordinates[0];
 
-    var feature = {
+    var cellFeature = {
         "type": "Feature",
         "geometry": {
             "type": "Polygon",
@@ -143,16 +137,24 @@ j=0;
         },
         "properties": {}
     }
-    return feature;
+    return cellFeature;
 }
 
 function draw(cell, style, label) {
-    var feature = cellToFeature(cell);
+    var cellFeature = cellToFeature(cell);
     var path = d3.geo.path()
         .projection(projection);
     svg.append("path")
-        .datum(feature)
+        .datum(cellFeature)
         .attr("class", style)
         .attr("d", path)
-        .append("svg:title").text(label);
+       ;
+
+    var p = projection(cell.point.reverse());
+    svg.append("circle")
+        .attr("class", "hospital")
+        .attr("cx", p[0])
+        .attr("cy", p[1])
+        .attr("r", 4)
+        .append("svg:title").text(label);        
 }

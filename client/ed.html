@@ -5,10 +5,27 @@
 <body>
     {{> main}}
     <div id="map"/>
+
+This application was developed using <a href="http://d3js.org">D3</a> and <a href="http://www.meteor.com">meteor</a> with data from <a href="https://data.medicare.gov/">Medicare</a>  and geocoding from <a href="https://developers.google.com/maps/">Google APIs</a>.
+    
+The code is available on <a href = "https://github.com/michaelaltmann/ed.git">GitHub</a>
+     email: Michael.Altmann@gmail.com
 </body>
 
 <template name="main">
-    <h2>Select a qualuty measure to see a diagram of MN hospitals, colored by their Emergency Department quality.</h2>
+    <h2>MN Emergency Department Quality</h2>
+  <p>   This page is an experimental visualization of the data hospitals report to the federal goverment about the quality of care.  The data are made available through   <A href="https://data.medicare.gov/">Medicare</A>. This visualization focuses on three measures related to the emergency department of MN hospitals.
+<small><DL>
+    <dt>ED1</dt><dd>Median time from emergency department arrival to emergency department departure for admitted emergency department patients </dd>
+    <dt>ED2</dt> <dd>Admit decision time to emergency department departure time for admitted patients</dd>
+    <dt>OP18</dt> <dd>Median time from emergency department arrival to emergency department departure for discharged emergency department patients</dd>
+    <dt>Door to diagnosis</dt> <dd>Door to diagnostic evaluation by a qualified medical professional</dd>
+    <dt>Time to pain med</dt> <dd>Average time patients who came to the emergency department with broken bones had to wait before receiving pain medication.</dd>
+    <dt>Left before being seen</dt> <dd>Percentage of patients who left the emergency department before being seen</dd>
+    <dt>Head CT Results</dt> <dd>Percentage of patients who came to the emergency department with stroke symptoms who received brain scan results within 45 minutes of arrival</dd>
+</DL> 
+    </small>
+<p>   Select a quality measure to see a diagram of MN hospitals, colored by their emergency department quality.  The region around each hospital is defined by the places for which that is the closest hospital.  The color indicates the result of the measure, with darker red representing a larger value.
     <select id="measurePicker">
         <option value="" data-id={{name}}>Select a measure</option>
         {{#each measures}}
