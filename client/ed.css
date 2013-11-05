@@ -100,6 +100,8 @@ path {
     border-width : 1;
     font-size: 10px;
     cursor: pointer;
+    background-color: #44A;
+    color: yellow;
 }
 .footer {
     color : darkgray;
