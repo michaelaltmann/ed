@@ -1,5 +1,16 @@
+function loadMeasureDescriptions() {
+    Measures.remove({});
+    Measures.insert({name:"ED1", description: "Median time in minutes from emergency department arrival to emergency department departure for admitted emergency department patients", sort: 1 });
+    Measures.insert({name:"ED2", description: "Admit decision time to emergency department departure time for admitted patients", sort: 2 });
+    Measures.insert({name:"OP 18", description: "Median time in minutes from emergency department arrival to emergency department departure for discharged emergency department patients", sort: 3 });
+    Measures.insert({name:"Door to diagnostic eval", description: "Time in minutes from door to diagnostic evaluation by a qualified medical professional", sort: 4});
+    Measures.insert({name:"Median time to pain med", description: "Average time in minutes patients who came to the emergency department with broken bones had to wait before receiving pain medication", sort: 5 });
+    Measures.insert({name:"Left before being seen", description: "Percentage of patients who left the emergency department before being seen", sort: 6 });
+    Measures.insert({name:"Head CT results", description: "Percentage of patients who came to the emergency department with stroke symptoms who received brain scan results within 45 minutes of arrival", sort: 7 });    
+}
 
 function addMeasure(name, value) {
+    name = name.trim();
     var selector = {name: name};
     var existing = Measures.find(selector);
     var m;
@@ -7,6 +18,7 @@ function addMeasure(name, value) {
         m = {name: name, min: 1000, max: 0};
         Measures.insert(m);
     } else {
+        console.log("Name >"+name+"< found " + existing.count());
         m = existing.fetch()[0];
     } 
     if (m.min == null) m.min = 1000;
@@ -15,9 +27,9 @@ function addMeasure(name, value) {
     if (value > m.max) m.max = value;
     Measures.update(selector, m);
 }
+
 function loadAllHospitals() {
     var url = "http://data.medicare.gov/resource/ee3i-x2ic.json?state=MN&$where=sample>0";
-    Measures.remove();
     res = Meteor.http.get(url);
     var previouslyLoaded = 0;
     var newlyLoaded = 0;
@@ -79,6 +91,7 @@ function geocode(address) {
 }
 
 function init() {
+    loadMeasureDescriptions();
     loadAllHospitals();
 }
 

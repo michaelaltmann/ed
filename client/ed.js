@@ -1,6 +1,6 @@
 Template.main.events({
-    "change #measurePicker": function (evt) {
-        var measureName = $(evt.target).val();
+    "click .carouselSlide": function (evt) {
+        var measureName = $(evt.target).attr("data-name");
         measure = Measures.find({
             name: measureName
         }).fetch()[0];
@@ -11,7 +11,7 @@ Template.main.events({
 });
 
 Template.main.measures = function () {
-    return Measures.find();
+    return Measures.find({}, {sort: {sort: 1}});
 }
 
 Meteor.subscribe("hospitals");
