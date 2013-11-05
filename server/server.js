@@ -18,7 +18,6 @@ function addMeasure(name, value) {
         m = {name: name, min: 1000, max: 0};
         Measures.insert(m);
     } else {
-        console.log("Name >"+name+"< found " + existing.count());
         m = existing.fetch()[0];
     } 
     if (m.min == null) m.min = 1000;
