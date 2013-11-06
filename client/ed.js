@@ -148,6 +148,7 @@ function draw(cell, style, label) {
         .datum(cellFeature)
         .attr("class", style)
         .attr("d", path)
+        .append("svg:title").text(label)
        ;
 
     var p = projection(cell.point.reverse());
@@ -155,6 +156,5 @@ function draw(cell, style, label) {
         .attr("class", "hospital")
         .attr("cx", p[0])
         .attr("cy", p[1])
-        .attr("r", 4)
-        .append("svg:title").text(label);        
+        .attr("r", 2);        
 }

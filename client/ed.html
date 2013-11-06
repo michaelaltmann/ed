@@ -9,7 +9,7 @@
                 
 {{> main}}
         <div id="map" />
-    <small> The region around each hospital is defined by the places for which that is the closest hospital. The color indicates the result of the measure, with darker red representing a larger value. Gray indicates that the hospital did not report a value for the selected measure.</small>
+    <small> This application does not display correctly in Internet Explorer.  The region around each hospital is defined by the places for which that is the closest hospital. The color indicates the result of the measure, with darker red representing a larger value. Gray indicates that the hospital did not report a value for the selected measure.</small>
 
 <br>
 <span class="footer">   
@@ -27,8 +27,9 @@
     <table><tr>
     {{#each measures}}
     <td class="carouselSlide" data-name="{{name}}">
-        <b>{{name}} </b>
+        <center><b>{{name}} </b>
         <br>Range: {{min}} - {{max}}
+            </center>
         <br>{{description}}
     </td>
     {{/each}}

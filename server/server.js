@@ -1,12 +1,12 @@
 function loadMeasureDescriptions() {
     Measures.remove({});
-    Measures.insert({name:"ED1", description: "Median time in minutes from emergency department arrival to emergency department departure for admitted emergency department patients", sort: 1 });
-    Measures.insert({name:"ED2", description: "Admit decision time to emergency department departure time for admitted patients", sort: 2 });
-    Measures.insert({name:"OP 18", description: "Median time in minutes from emergency department arrival to emergency department departure for discharged emergency department patients", sort: 3 });
-    Measures.insert({name:"Door to diagnostic eval", description: "Time in minutes from door to diagnostic evaluation by a qualified medical professional", sort: 4});
-    Measures.insert({name:"Median time to pain med", description: "Average time in minutes patients who came to the emergency department with broken bones had to wait before receiving pain medication", sort: 5 });
-    Measures.insert({name:"Left before being seen", description: "Percentage of patients who left the emergency department before being seen", sort: 6 });
-    Measures.insert({name:"Head CT results", description: "Percentage of patients who came to the emergency department with stroke symptoms who received brain scan results within 45 minutes of arrival", sort: 7 });    
+    Measures.insert({name:"ED1", description: "Median time in minutes from emergency department arrival to emergency department departure for admitted emergency department patients.", sort: 1 });
+    Measures.insert({name:"ED2", description: "Admit decision time to emergency department departure time for admitted patients.", sort: 2 });
+    Measures.insert({name:"OP 18", description: "Median time in minutes from emergency department arrival to emergency department departure for discharged emergency department patients.", sort: 3 });
+    Measures.insert({name:"Door to diagnostic eval", description: "Time in minutes from door to diagnostic evaluation by a qualified medical professional.", sort: 4});
+    Measures.insert({name:"Median time to pain med", description: "Average time in minutes patients who came to the emergency department with broken bones had to wait before receiving pain medication.", sort: 5 });
+    Measures.insert({name:"Left before being seen", description: "Percentage of patients who left the emergency department before being seen.", sort: 6 });
+    Measures.insert({name:"Head CT results", description: "Percentage of patients who came to the emergency department with stroke symptoms who received brain scan results within 45 minutes of arrival.", sort: 7 });    
 }
 
 function addMeasure(name, value) {

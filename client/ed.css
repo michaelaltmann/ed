@@ -96,12 +96,17 @@ path {
 }
 .carouselSlide {
     border-style: solid;
-    border-color: black;
+    border-color: #44A;
     border-width : 1;
+    border-radius: 4px;
     font-size: 10px;
     cursor: pointer;
-    background-color: #44A;
-    color: yellow;
+    background-color: #EEE;
+    color: black;
+    vertical-align: top;
+}
+.carouselSlide:hover {
+    background-color: #DDD;
 }
 .footer {
     color : darkgray;
