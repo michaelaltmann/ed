@@ -1,1 +1,1 @@
-This is a small project inspired by a desire to see whenther hospitals in rural areas have worse quality.  
+This is a small project inspired by a desire to see whether hospitals in rural areas have worse quality.  The data comes from data.medicare.gov, which has a nice set of tools for charting data, but they neglected to geocode the hospital locations.  I have always love Voronoi diagrams, so this was an excuse to try D3 library. 
