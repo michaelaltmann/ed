@@ -100,6 +100,7 @@ path {
     border-width : 1;
     border-radius: 4px;
     font-size: 10px;
+    width : 200px;
     cursor: pointer;
     background-color: #EEE;
     color: black;
