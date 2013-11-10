@@ -111,6 +111,9 @@ function redraw() {
             level = 1+ Math.floor((rate - measure.min) * 15 / (measure.max - measure.min));
             if (level < 1) level = 1;
             if (level > 15) level = 15;
+            if (measure.higherIsBetter) {
+                level = 1 + (15-level);
+            }
             label = hospital.name + " " + rate;
         }
         var style = "cell" + level;
