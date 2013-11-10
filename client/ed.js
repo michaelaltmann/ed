@@ -20,7 +20,7 @@ var width = 600,
     height = 500,
     maxRate = 60;
 var measure = "ED2";
-var bBox = [[43.5, -97], [49, -91]];
+var bBox = [[43.5, -97], [49, -89]];
 
 
 var canvas;
@@ -57,16 +57,20 @@ function readOnePoint(hospital) {
 
 function createSvg() {
     if (svg == null) {
-        svg = d3.select("#map").append("svg")
+        svg = d3.select("#map").select("svg")
             .attr("overflow", "hidden")
             .attr("width", width)
             .attr("height", height);
+        var el = document.getElementById("svg");
+        var clipper = document.createElement("clipPath");
+        clipper.setAttribute("id","clipper");
+        svg.appendChild(clipper);
     }
 }
 
 function loadMap() {
     createSvg();
-    d3.json("example-data/mn-county-2010.geo.json", function (error, mn) {
+    d3.json("example-data/minnesota.geojson", function (error, mn) {
         var path = d3.geo.path()
             .projection(projection);
         svg.append("path")
@@ -75,6 +79,14 @@ function loadMap() {
                 features: mn.features
             })
             .attr("class", "map")
+            .attr("d", path);
+        svg.append("clipPath")
+            .attr("id", "clipper")
+            .append("path")
+            .datum({
+                type: "FeatureCollection",
+                features: mn.features
+            })
             .attr("d", path);
     });
 }
@@ -101,7 +113,6 @@ function redraw() {
         var screenPt = cell.point;
         hospital = siteMap[screenPt];
         var rate = hospital.measures[measure.name];
-        console.log("rate " + rate);
         var level, label;
         if (rate == null) {
             level = -1;
@@ -123,7 +134,6 @@ function redraw() {
 
 function cellToFeature(cell) {
     var coordinates = [];
-    console.log("----");
     // Need to reverse the order because 
     // D3 geom wants them in clockwise order
     for (var j = cell.length - 1; j >= 0; j--) {
@@ -151,6 +161,7 @@ function draw(cell, style, label) {
         .datum(cellFeature)
         .attr("class", style)
         .attr("d", path)
+        .attr("clip-path","url(#clipper)")
         .append("svg:title").text(label)
        ;
 

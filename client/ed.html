@@ -8,10 +8,15 @@
         <A href="https://data.medicare.gov/">Medicare</A>. This visualization focuses on the measures related to the emergency department of MN hospitals. Select a quality measure to see a diagram of MN hospitals, colored by their emergency department quality. 
                 
 {{> main}}
-        <div id="map" />
+        <div id="map" >
+    <svg id="svg">
+        </svg>    
+    </div>
     <small> This application does not display correctly in Internet Explorer.  The region around each hospital is defined by the places for which that is the closest hospital. The color indicates the result of the measure, with darker red representing a larger value. Gray indicates that the hospital did not report a value for the selected measure.</small>
 
 <br>
+
+    
 <span class="footer">   
     This application was developed using
         <a href="http://d3js.org">D3</a> and

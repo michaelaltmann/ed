@@ -7,7 +7,7 @@ path {
     fill: none;
 }
 .map {
-    stroke: lightgray;;
+    stroke: black;
 }
 
 .cell-1 {
