@@ -1,0 +1,1 @@
+This is a small project inspired by a desire to see whenther hospitals in rural areas have worse quality.  
